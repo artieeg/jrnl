@@ -1,0 +1,10 @@
+#/bin/sh
+
+command=$(cat $HOME/.zsh_history | fzf)
+echo $command
+
+if [[ $* == *-p* ]]; then
+  echo $command
+else
+  echo $(eval $command)
+fi
