@@ -1,10 +1,17 @@
-#/bin/sh
+#!/bin/sh
 
-command=$(cat $HOME/.zsh_history | fzf)
-echo $command
+# Get OS Name
+unameOut="$(uname -s)"
+case "${unameOut}" in
+    Linux*)     machine=Linux; clipboard_command="xclip -selection clipboard";;
+    Darwin*)    machine=Mac; clipboard_command="pbcopy";;
+    *)          machine="UNKNOWN:${unameOut}"; clipboard_command="";;
+esac
 
-if [[ $* == *-p* ]]; then
-  echo $command
-else
-  echo $(eval $command)
-fi
+# Use fzf to select a command
+selected_command=$(cat $HOME/.zsh_history | fzf)
+
+# Put the selected command into the clipboard
+echo $selected_command | $clipboard_command
+
+echo "Copied to clipboard: $selected_command"
